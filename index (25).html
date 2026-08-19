@@ -1,0 +1,1135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Squad - JEE Learning Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: linear-gradient(145deg, #dce3ec 0%, #c8d0da 100%);
+            --card-bg: linear-gradient(145deg, #eef3fc 0%, #dfe6f0 100%);
+            --card-shadow: 12px 12px 24px rgba(0,0,0,0.1), -8px -8px 16px rgba(255,255,255,0.7);
+            --card-shadow-inset: inset 6px 6px 12px rgba(0,0,0,0.05), inset -4px -4px 8px rgba(255,255,255,0.6);
+            --inner-glow: inset 2px 2px 5px rgba(255,255,255,0.8), inset -2px -2px 5px rgba(0,0,0,0.05);
+            --text-dark: #1a2a3a;
+            --text-muted: #4a5b6e;
+            --accent-blue: #3b82f6;
+            --accent-blue-grad: linear-gradient(135deg, #3b82f6, #1e40af);
+            --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --gold: linear-gradient(135deg, #fbbf24, #d97706);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: linear-gradient(145deg, #dce3ec 0%, #c8d0da 100%);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* 3D Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Skeuomorphic - 3D Science Background */
+        .science-3d {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .science-3d .math-symbol {
+            position: absolute;
+            font-size: 120px;
+            font-weight: 900;
+            opacity: 0.04;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.1), -2px -2px 4px rgba(255,255,255,0.5);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .science-3d .math-symbol:nth-child(1) { top: 5%; left: -2%; animation: drift 25s linear infinite; }
+        .science-3d .math-symbol:nth-child(2) { bottom: 10%; right: -3%; animation: driftRev 30s linear infinite; }
+        .science-3d .math-symbol:nth-child(3) { top: 40%; right: 15%; animation: drift 20s linear infinite; font-size: 80px; }
+        .science-3d .math-symbol:nth-child(4) { bottom: 30%; left: 10%; animation: driftRev 22s linear infinite; }
+        .science-3d .math-symbol:nth-child(5) { top: 70%; left: 20%; animation: drift 18s linear infinite; }
+
+        @keyframes drift {
+            from { transform: translateX(-100%) rotate(0deg); }
+            to { transform: translateX(200%) rotate(360deg); }
+        }
+        @keyframes driftRev {
+            from { transform: translateX(100%) rotate(0deg); }
+            to { transform: translateX(-200%) rotate(-360deg); }
+        }
+
+        /* Floating 3D Icons */
+        .float-3d {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .float-3d span {
+            position: absolute;
+            font-size: 28px;
+            opacity: 0.08;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            filter: drop-shadow(2px 2px 2px rgba(255,255,255,0.5));
+            animation: float3d 8s ease-in-out infinite;
+        }
+        @keyframes float3d {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(5deg); }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Skeuomorphic Navbar */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 1400px;
+            z-index: 10000;
+            background: linear-gradient(145deg, #eef3fc, #dfe6f0);
+            border-radius: 60px;
+            box-shadow: 10px 10px 25px rgba(0,0,0,0.12), -8px -8px 20px rgba(255,255,255,0.8), inset 0px 1px 0px rgba(255,255,255,0.6);
+            padding: 0.8rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-logo-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 5px 5px 12px rgba(0,0,0,0.15), -3px -3px 8px rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .nav-logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3a5f, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-blue);
+            text-shadow: 0px 0px 5px rgba(59,130,246,0.3);
+        }
+
+        .nav-cta {
+            background: linear-gradient(145deg, #eef3fc, #dfe6f0);
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.1), -4px -4px 8px rgba(255,255,255,0.6);
+            border: none;
+            font-family: inherit;
+        }
+
+        .nav-cta:hover {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.05), inset -2px -2px 6px rgba(255,255,255,0.5);
+            transform: scale(0.97);
+        }
+
+        /* Hero Section */
+        #hero {
+            padding-top: 140px;
+            padding-bottom: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        /* Skeuomorphic Hero Card */
+        .hero-left {
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 48px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(145deg, #eef3fc, #dfe6f0);
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.05), inset -2px -2px 4px rgba(255,255,255,0.7);
+            color: var(--accent-blue);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #1a2a3a, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #8b5cf6, #ef4444);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Skeuomorphic Buttons */
+        .btn-primary, .btn-secondary {
+            padding: 0.9rem 2rem;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #3b82f6, #1e40af);
+            box-shadow: 8px 8px 16px rgba(0,0,0,0.15), -4px -4px 10px rgba(255,255,255,0.4);
+            color: white;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 12px 12px 20px rgba(0,0,0,0.2), -6px -6px 12px rgba(255,255,255,0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(145deg, #eef3fc, #dfe6f0);
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.1), -4px -4px 8px rgba(255,255,255,0.6);
+            color: var(--accent-blue);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.05), inset -2px -2px 6px rgba(255,255,255,0.5);
+            transform: scale(0.98);
+        }
+
+        /* Hero Right - 3D Science Cards */
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .science-card {
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 32px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.4);
+            cursor: pointer;
+        }
+
+        .science-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 15px 15px 30px rgba(0,0,0,0.15), -10px -10px 20px rgba(255,255,255,0.7);
+        }
+
+        .science-card .formula {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .science-card .desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .formula.math { color: var(--accent-blue); }
+        .formula.physics { color: var(--accent-purple); }
+        .formula.chemistry { color: var(--accent-green); }
+
+        /* Stats Section - 3D Glassmorphic */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            background: linear-gradient(145deg, rgba(238,243,252,0.7), rgba(223,230,240,0.7));
+            border-radius: 56px;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: linear-gradient(145deg, #eef3fc, #dfe6f0);
+            border-radius: 40px;
+            box-shadow: var(--inner-glow);
+        }
+
+        .stat-num {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3a5f, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            font-weight: 600;
+        }
+
+        /* Course Cards - Rich 3D */
+        #courses {
+            padding: 4rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-eyebrow {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1a2a3a, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .course-card {
+            padding: 1.8rem;
+            background: var(--card-bg);
+            border-radius: 40px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 18px 18px 32px rgba(0,0,0,0.15), -12px -12px 24px rgba(255,255,255,0.7);
+        }
+
+        .course-icon {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(145deg, #eef3fc, #dfe6f0);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--card-shadow-inset);
+        }
+
+        .course-level {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .course-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Why Section - 3D Panel */
+        #why {
+            padding: 4rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .why-point {
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background: var(--card-bg);
+            border-radius: 32px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255,255,255,0.4);
+            transition: all 0.3s;
+        }
+
+        .why-point:hover {
+            transform: translateX(5px);
+        }
+
+        .why-num {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gold);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .why-point-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .why-point-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .quote-card {
+            padding: 2rem;
+            background: linear-gradient(145deg, #eef3fc, #dfe6f0);
+            border-radius: 48px;
+            box-shadow: var(--card-shadow-inset);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .quote-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            line-height: 1.6;
+            color: var(--accent-blue);
+            font-style: italic;
+        }
+
+        /* CTA Section - 3D Embossed */
+        .cta-section {
+            padding: 3.5rem;
+            text-align: center;
+            background: linear-gradient(145deg, #eef3fc, #dfe6f0);
+            border-radius: 56px;
+            margin: 3rem 0;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #1a2a3a, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .cta-section p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .cta-btns-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer - Skeuomorphic */
+        .footer {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: linear-gradient(145deg, #eef3fc, #dfe6f0);
+            border-radius: 56px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .ftop {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .fbrand .btxt {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3a5f, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .fbrand p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .fcol h4 {
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .fcol ul {
+            list-style: none;
+        }
+
+        .fcol li {
+            margin-bottom: 0.5rem;
+        }
+
+        .fcol a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            transition: color 0.3s;
+        }
+
+        .fcol a:hover {
+            color: var(--accent-blue);
+        }
+
+        .fbot {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* App View */
+        #app-view {
+            display: none;
+            position: relative;
+            z-index: 1;
+            padding-top: 100px;
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border-radius: 60px;
+            box-shadow: var(--card-shadow-inset);
+        }
+
+        .bc-link {
+            cursor: pointer;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .video-wrapper {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 40px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .video-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .video-title {
+            font-weight: 700;
+        }
+
+        .quality-select {
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            border: none;
+            background: linear-gradient(145deg, #eef3fc, #dfe6f0);
+            box-shadow: var(--inner-glow);
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 28px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        video::-webkit-media-controls-fullscreen-button {
+            display: block;
+        }
+
+        video:fullscreen {
+            width: 100%;
+            height: 100%;
+        }
+
+        :-webkit-full-screen video {
+            width: 100%;
+            height: 100%;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 900px) {
+            body { padding: 10px; }
+            nav { padding: 0.6rem 1rem; }
+            .nav-links { display: none; }
+            .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .hero-title { font-size: 2.5rem; }
+            .stats-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .why-grid { grid-template-columns: 1fr; }
+            .ftop { grid-template-columns: 1fr; text-align: center; }
+            .courses-grid { grid-template-columns: 1fr; }
+            .cta-section { padding: 2rem; }
+            #app-view { padding-top: 100px; }
+            #hero { padding-top: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Skeuomorphic 3D Science Background -->
+<div class="science-3d">
+    <div class="math-symbol">∫</div>
+    <div class="math-symbol">√</div>
+    <div class="math-symbol">π</div>
+    <div class="math-symbol">Δ</div>
+    <div class="math-symbol">ψ</div>
+</div>
+<div class="float-3d">
+    <span style="top: 10%; left: 5%;">🔬</span>
+    <span style="top: 20%; right: 8%;">⚛️</span>
+    <span style="top: 50%; left: 2%;">📐</span>
+    <span style="bottom: 30%; right: 3%;">🧪</span>
+    <span style="top: 70%; left: 10%;">⚡</span>
+    <span style="bottom: 15%; left: 20%;">🧬</span>
+    <span style="top: 40%; right: 15%;">🔭</span>
+</div>
+
+<div class="container">
+    <nav>
+        <a class="nav-logo" onclick="goHome()">
+            <img src="https://i.postimg.cc/52yM0nbQ/IMG-20260412-193847-612.jpg" alt="Study Squad" class="nav-logo-img" onerror="this.src='https://via.placeholder.com/44?text=SS'">
+            <span class="nav-logo-text">STUDY SQUAD</span>
+        </a>
+        <ul class="nav-links">
+            <li><a onclick="scrollToSection('hero')">Home</a></li>
+            <li><a onclick="scrollToSection('courses')">Batches</a></li>
+            <li><a onclick="scrollToSection('why')">Why Us</a></li>
+        </ul>
+        <div class="nav-cta" onclick="scrollToSection('courses')">🚀 Start Learning</div>
+    </nav>
+
+    <div id="landing-view">
+        <!-- Google Ads Banner - Top Banner Ad -->
+        <div style="margin: 20px auto; max-width: 100%; text-align: center;">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-YOUR_PUBLISHER_ID" data-ad-slot="YOUR_AD_SLOT_ID" data-ad-format="horizontal"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <section id="hero">
+            <div class="hero-grid">
+                <div class="hero-left">
+                    <div class="hero-badge">⚡ JEE Advanced 2026</div>
+                    <h1 class="hero-title">Master <span>JEE</span> with<br>Study Squad</h1>
+                    <p class="hero-desc">Crack IIT JEE with India's most comprehensive learning platform. Access premium video lectures, detailed study materials, and mock tests — all for free.</p>
+                    <div class="hero-buttons">
+                        <button class="btn-primary" onclick="scrollToSection('courses')">Explore Batches →</button>
+                        <button class="btn-secondary" onclick="scrollToSection('why')">Learn More</button>
+                    </div>
+                </div>
+                <div class="hero-right">
+                    <div class="science-card">
+                        <div class="formula math">∫₀^∞ e^{-x²} dx = √π/2</div>
+                        <div class="desc">Gaussian Integral - Mathematics</div>
+                    </div>
+                    <div class="science-card">
+                        <div class="formula physics">E = mc² | F = dp/dt</div>
+                        <div class="desc">Mass-Energy Equivalence - Physics</div>
+                    </div>
+                    <div class="science-card">
+                        <div class="formula chemistry">K_eq = [C]ᶜ[D]ᵈ / [A]ᵃ[B]ᵇ</div>
+                        <div class="desc">Chemical Equilibrium - Chemistry</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="stats-grid">
+            <div class="stat-item"><span class="stat-num">50k+</span><div class="stat-label">Active Students</div></div>
+            <div class="stat-item"><span class="stat-num">1000+</span><div class="stat-label">Video Lectures</div></div>
+            <div class="stat-item"><span class="stat-num">24/7</span><div class="stat-label">Study Access</div></div>
+        </div>
+
+        <section id="courses">
+            <div class="section-header">
+                <div class="section-eyebrow">JEE 2026 Batches</div>
+                <h2 class="section-h2">Choose Your Batch</h2>
+            </div>
+            <div class="courses-grid" id="batches-grid">
+                <div class="loader">Loading batches...</div>
+            </div>
+        </section>
+
+        <section id="why">
+            <div class="section-header">
+                <div class="section-eyebrow">Why Study Squad</div>
+                <h2 class="section-h2">Built for JEE Aspirants</h2>
+            </div>
+            <div class="why-grid">
+                <div>
+                    <div class="why-point">
+                        <div class="why-num">01</div>
+                        <div class="why-point-title">HD Video Lectures</div>
+                        <div class="why-point-desc">High-quality streaming with adaptive bitrate for smooth learning on any connection.</div>
+                    </div>
+                    <div class="why-point">
+                        <div class="why-num">02</div>
+                        <div class="why-point-title">PDF Study Materials</div>
+                        <div class="why-point-desc">Downloadable notes, DPPs, and previous year papers for practice.</div>
+                    </div>
+                    <div class="why-point">
+                        <div class="why-num">03</div>
+                        <div class="why-point-title">Topic-wise Organization</div>
+                        <div class="why-point-desc">Structured content for Physics, Chemistry, and Mathematics.</div>
+                    </div>
+                </div>
+                <div class="quote-card">
+                    <div class="quote-text">"The only limit is your dedication — we provide the rest."</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="cta-section">
+            <h2>Ready to Crack JEE?</h2>
+            <p>Join thousands of successful aspirants who chose Study Squad.</p>
+            <div class="cta-btns-container">
+                <button class="btn-primary" onclick="scrollToSection('courses')">📚 Explore Batches</button>
+                <button class="btn-secondary" onclick="window.open('https://t.me/+DWoy0pgaw9VjOGM1')">📢 Join Telegram</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-view">
+        <div class="breadcrumbs" id="breadcrumbs"></div>
+        <div class="app-header">
+            <div class="section-eyebrow">Study Squad Directory</div>
+            <h2 class="section-h2" id="app-title">Loading...</h2>
+        </div>
+        <div class="video-wrapper" id="video-wrapper" style="display: none;">
+            <div class="video-header">
+                <div class="video-title" id="video-title">Player</div>
+                <div class="video-controls">
+                    <select class="quality-select" id="quality-selector" onchange="changeVideoQuality()"></select>
+                    <button class="nav-cta" onclick="closePlayer()" style="padding: 5px 15px;">Close</button>
+                </div>
+            </div>
+            <video id="video-player" controls autoplay allowfullscreen></video>
+        </div>
+        <div class="courses-grid" id="content-grid"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="ftop">
+            <div class="fbrand">
+                <span class="btxt">📘 STUDY SQUAD</span>
+                <p>Free & premium quality JEE preparation resources for every aspirant.</p>
+            </div>
+            <div class="fcol">
+                <h4>Platforms</h4>
+                <ul>
+                    <li><a href="https://mixvibe-pw.vercel.app/">Physics Wallah</a></li>
+                    <li><a href="https://mixvibe-nt.vercel.app/">Next Toppers</a></li>
+                    <li><a href="https://mixvibe-mj.vercel.app/">Mission JEET</a></li>
+                    <li><a href="https://pietech.vercel.app/VibrantAcademy">Vibrant Academy</a></li>
+                    <li><a href="https://edukhazana.vercel.app/">EduLibrary</a></li>
+                </ul>
+            </div>
+            <div class="fcol">
+                <h4>Community</h4>
+                <ul>
+                    <li><a href="https://t.me/+DWoy0pgaw9VjOGM1">Telegram Channel</a></li>
+                    <li><a href="https://t.me/+DWoy0pgaw9VjOGM1">Support Bot</a></li>
+                </ul>
+            </div>
+            <div class="fcol">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a onclick="scrollToSection('courses')">Batches</a></li>
+                    <li><a onclick="scrollToSection('why')">Features</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="fbot">
+            <p>© 2026 Study Squad · Empowering JEE Aspirants</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+// ========== SECURITY & PROTECTION ==========
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+document.onkeydown = function(e) {
+    if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.shiftKey && e.key === 'C') || (e.ctrlKey && e.key === 's')) {
+        e.preventDefault(); return false;
+    }
+};
+console.clear();
+console.log("%c🔒 Study Squad - Premium JEE Platform", "color: #3b82f6; font-size: 16px; font-weight: bold;");
+
+// API Configuration
+const BASE_API = "https://vibrant-drab.vercel.app/api/v1/vibrant";
+const VIDEO_API = "https://pdablu-yourl.wasmer.app/";
+
+let currentCourseId = null;
+let currentFolderId = "-1"; 
+let navHistory = []; 
+let hlsInstance = null;
+let currentVideoSources = {}; 
+
+const landingView = document.getElementById('landing-view');
+const appView = document.getElementById('app-view');
+const batchesGrid = document.getElementById('batches-grid');
+const contentGrid = document.getElementById('content-grid');
+const breadcrumbs = document.getElementById('breadcrumbs');
+const appTitle = document.getElementById('app-title');
+const videoWrapper = document.getElementById('video-wrapper');
+const videoPlayer = document.getElementById('video-player');
+const qualitySelector = document.getElementById('quality-selector');
+
+window.onload = loadBatches;
+
+function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
+
+function goHome() {
+    closePlayer();
+    appView.style.display = 'none';
+    landingView.style.display = 'block';
+    window.scrollTo(0, 0);
+}
+
+async function loadBatches() {
+    try {
+        const res = await fetch(`${BASE_API}/batches`);
+        const data = await res.json();
+        batchesGrid.innerHTML = '';
+        if(data.success && data.batches && data.batches.length > 0) {
+            data.batches.forEach((batch) => {
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                card.onclick = () => openCourse(batch.batch_id, batch.batch_name);
+                card.innerHTML = `
+                    <div class="course-icon">📖</div>
+                    <div class="course-level">${batch.validity || 'JEE Batch'}</div>
+                    <div class="course-name">${batch.batch_name}</div>
+                    <div class="course-desc">Physics, Chemistry & Mathematics</div>
+                `;
+                batchesGrid.appendChild(card);
+            });
+        } else {
+            batchesGrid.innerHTML = '<div class="loader">No batches available.</div>';
+        }
+    } catch(error) {
+        batchesGrid.innerHTML = '<div class="loader">Error loading batches.</div>';
+    }
+}
+
+function openCourse(courseId, courseName) {
+    landingView.style.display = 'none';
+    appView.style.display = 'block';
+    window.scrollTo(0, 0);
+    currentCourseId = courseId;
+    navHistory = [{ id: "-1", title: courseName }];
+    updateBreadcrumbs();
+    loadFolders("-1", courseName);
+}
+
+async function loadFolders(folderId, titleStr = null) {
+    closePlayer();
+    currentFolderId = folderId;
+    if(titleStr) {
+        const existingIdx = navHistory.findIndex(n => n.id === folderId);
+        if(existingIdx > -1) {
+            navHistory = navHistory.slice(0, existingIdx + 1);
+        } else {
+            navHistory.push({ id: folderId, title: titleStr });
+        }
+        updateBreadcrumbs();
+        appTitle.innerText = titleStr;
+    }
+    contentGrid.innerHTML = '<div class="loader">Loading content...</div>';
+    try {
+        let targetUrl = folderId === "-1" 
+            ? `${BASE_API}/content?batch_id=${currentCourseId}`
+            : `${BASE_API}/content?folder_id=${folderId}&course_id=${currentCourseId}`;
+        const res = await fetch(targetUrl);
+        const data = await res.json();
+        contentGrid.innerHTML = '';
+        if(data.success && data.items && data.items.length > 0) {
+            data.items.forEach((item) => {
+                const typeUpper = item.type.toUpperCase();
+                let icon = "📂";
+                if(typeUpper === 'VIDEO') icon = "🎬";
+                if(typeUpper === 'PDF') icon = "📄";
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                card.onclick = () => handleItemClick(item, item.title);
+                card.innerHTML = `
+                    <div class="course-icon">${icon}</div>
+                    <div class="course-level">${typeUpper}</div>
+                    <div class="course-name">${item.title}</div>
+                    <div class="course-desc">${item.type === 'folder' ? `${item.videos_count || 0} videos, ${item.files_count || 0} files` : (item.duration || 'Available')}</div>
+                `;
+                contentGrid.appendChild(card);
+            });
+        } else {
+            contentGrid.innerHTML = '<div class="loader">No content available.</div>';
+        }
+    } catch(err) {
+        contentGrid.innerHTML = '<div class="loader">Error loading content.</div>';
+    }
+}
+
+function handleItemClick(item, itemTitle) {
+    const itemType = item.type.toLowerCase();
+    if(itemType === 'folder') {
+        loadFolders(item.id, itemTitle);
+    } else if(itemType === 'video') {
+        playVideo(item.id, itemTitle);
+    } else {
+        openDocument(item.id);
+    }
+}
+
+async function openDocument(itemId) {
+    const newTab = window.open('about:blank', '_blank');
+    newTab.document.write('<body style="background:#e0e5ec; display:flex; justify-content:center; align-items:center;"><div style="background:#fff; padding:20px; border-radius:20px;">Loading document...</div></body>');
+    try {
+        const pdfApiUrl = `${BASE_API}/pdf?pdf_id=${itemId}&course_id=${currentCourseId}&parent_id=${currentFolderId}`;
+        const res = await fetch(pdfApiUrl);
+        const data = await res.json();
+        if(data && data.success && data.pdf_viewer) {
+            newTab.location.href = data.pdf_viewer;
+        } else {
+            newTab.document.body.innerHTML = '<div style="color:#ef4444;">Error loading document.</div>';
+        }
+    } catch(err) {
+        newTab.document.body.innerHTML = '<div style="color:#ef4444;">Failed to load document.</div>';
+    }
+}
+
+async function playVideo(videoId, title) {
+    contentGrid.style.display = 'none';
+    videoWrapper.style.display = 'block';
+    document.getElementById('video-title').innerText = title;
+    videoPlayer.src = "";
+    qualitySelector.innerHTML = '<option>Loading qualities...</option>';
+    try {
+        const res = await fetch(`${VIDEO_API}?action=video&video_id=${videoId}&course_id=${currentCourseId}`);
+        const data = await res.json();
+        if(data.q && Object.keys(data.q).length > 0) {
+            currentVideoSources = data.q;
+            qualitySelector.innerHTML = '';
+            const qualities = Object.keys(data.q).sort((a,b) => parseInt(b) - parseInt(a));
+            qualities.forEach(q => {
+                const opt = document.createElement('option');
+                opt.value = q;
+                opt.innerText = `${q}p`;
+                qualitySelector.appendChild(opt);
+            });
+            initHLSPlayer(currentVideoSources[qualities[0]]);
+        } else {
+            alert("Video stream unavailable.");
+            closePlayer();
+        }
+    } catch(err) {
+        alert("Unable to load video.");
+        closePlayer();
+    }
+}
+
+function changeVideoQuality() {
+    const selectedQuality = qualitySelector.value;
+    if(currentVideoSources[selectedQuality]) {
+        const currentTime = videoPlayer.currentTime;
+        initHLSPlayer(currentVideoSources[selectedQuality], currentTime);
+    }
+}
+
+function initHLSPlayer(m3u8Url, startTime = 0) {
+    if(hlsInstance) { hlsInstance.destroy(); }
+    if(Hls.isSupported()) {
+        hlsInstance = new Hls();
+        hlsInstance.loadSource(m3u8Url);
+        hlsInstance.attachMedia(videoPlayer);
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+            videoPlayer.currentTime = startTime;
+            videoPlayer.play();
+        });
+    } else if(videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+        videoPlayer.src = m3u8Url;
+        videoPlayer.currentTime = startTime;
+        videoPlayer.play();
+    }
+}
+
+function closePlayer() {
+    if(hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+    videoPlayer.pause();
+    videoPlayer.src = "";
+    videoWrapper.style.display = 'none';
+    contentGrid.style.display = 'grid';
+}
+
+function updateBreadcrumbs() {
+    breadcrumbs.innerHTML = '<span class="bc-link" onclick="goHome()">🏠 Home</span>';
+    navHistory.forEach((nav) => {
+        breadcrumbs.innerHTML += `<span style="margin:0 5px;">/</span>`;
+        breadcrumbs.innerHTML += `<span class="bc-link" onclick="loadFolders('${nav.id}', '${nav.title.replace(/'/g, "\\'")}')">${nav.title}</span>`;
+    });
+}
+</script>
+</body>
+</html>
