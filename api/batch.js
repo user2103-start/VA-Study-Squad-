@@ -47,33 +47,38 @@ const batches = [
   },
   {
     id: 37,
-    cls: JEE 2027 batch,
+    cls: 12,
     title: "DROPPER X2",
-    imageurl: "https://appx-content-v2.classx.co.in/paid_course3/2026-07-25-0_07261587898334942.png",
-    price: "FREE"
+    imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-07-25-0_07261587898334942.png",
+    price: "Free",
+    originalPrice: "",
+    discount: ""
   }
 ];
 
 export default function handler(req, res) {
   const { cls } = req.query;
-  
+
   // Enable CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
-  if (req.method === 'OPTIONS') {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
-  
+
   let result = batches;
-  
+
   if (cls) {
-    result = batches.filter(b => b.cls === parseInt(cls));
+    result = batches.filter(
+      (b) => Number(b.cls) === Number(cls)
+    );
   }
-  
-  res.status(200).json({
+
+  return res.status(200).json({
     success: true,
+    count: result.length,
     data: result
   });
 }
