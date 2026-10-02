@@ -44,6 +44,13 @@ const batches = [
     price: "Free",
     originalPrice: "",
     discount: ""
+  },
+  {
+    id: 37,
+    cls: JEE 2027 batch,
+    title: "DROPPER X2",
+    imageurl: "https://appx-content-v2.classx.co.in/paid_course3/2026-07-25-0_07261587898334942.png",
+    price: FREE
   }
 ];
 
