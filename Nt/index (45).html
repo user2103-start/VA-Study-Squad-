@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Silent Hours – Free Study Batches</title>
+<meta name="theme-color" content="#101827">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+<style>
+:root{
+  --bg:#101827;--bg2:#162036;--card:#1a2742;--line:#2a3a5c;
+  --tx:#e9edf6;--mu:#93a1c0;--lamp:#f2c46d;--lamp-d:#2b2412;--teal:#6fd0c0;--red:#ff8a8a;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);color:var(--tx);font-family:Hind,system-ui,sans-serif;font-size:16px;line-height:1.5}
+body{min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+h1,h2,h3{font-family:'Bricolage Grotesque',Hind,sans-serif;line-height:1.15}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--lamp);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:20;background:rgba(16,24,39,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+header.top .wrap{display:flex;align-items:center;gap:12px;height:56px}
+.logo{font-family:'Bricolage Grotesque';font-weight:700;font-size:20px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.moon{width:18px;height:18px;border-radius:50%;background:var(--lamp);box-shadow:inset -6px -2px 0 0 var(--bg);}
+.back{display:none;width:36px;height:36px;border-radius:50%;background:var(--bg2);align-items:center;justify-content:center;font-size:18px}
+.back.on{display:flex}
+.crumb{color:var(--mu);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;text-align:right}
+
+/* home */
+.hero{padding:32px 0 8px}
+.hero h1{font-size:clamp(28px,6vw,46px);max-width:14ch}
+.hero p{color:var(--mu);margin-top:10px;max-width:46ch}
+.tools{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 12px;align-items:center}
+.search{flex:1 1 220px;background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:10px 16px}
+.search::placeholder{color:var(--mu)}
+.sort{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:10px 14px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:7px 14px;border-radius:999px;border:1px solid var(--line);color:var(--mu);font-size:14px;background:transparent}
+.chip.on{background:var(--lamp);border-color:var(--lamp);color:#1b1503;font-weight:600}
+.count{color:var(--mu);font-size:14px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;padding-bottom:40px}
+.batch{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;text-align:left;display:flex;flex-direction:column;transition:transform .15s,border-color .15s}
+.batch:hover{transform:translateY(-3px);border-color:var(--lamp)}
+.thumb{aspect-ratio:16/9;background:linear-gradient(135deg,#223357,#162036);position:relative;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque';font-size:34px;color:var(--lamp)}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;left:10px;top:10px;background:var(--lamp);color:#1b1503;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;z-index:1}
+.batch .bd{padding:12px 14px 14px}
+.batch h3{font-size:17px}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pill{font-size:12px;color:var(--teal);border:1px solid rgba(111,208,192,.35);padding:1px 9px;border-radius:999px}
+
+/* batch page */
+.bh{padding:20px 0 6px}
+.bh h2{font-size:clamp(22px,4.5vw,32px)}
+.seg{display:flex;gap:4px;background:var(--bg2);padding:4px;border-radius:999px;width:max-content;margin:16px 0}
+.seg button{padding:8px 22px;border-radius:999px;color:var(--mu);font-weight:500}
+.seg button.on{background:var(--lamp);color:#1b1503;font-weight:600}
+.panel{padding-bottom:50px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.box h3{font-size:16px;margin-bottom:8px;color:var(--lamp)}
+.kv{display:grid;grid-template-columns:minmax(90px,150px) 1fr;gap:6px 14px;font-size:15px}
+.kv dt{color:var(--mu)}
+.kv dd{word-break:break-word}
+.desc{white-space:pre-wrap;color:#d4dbec}
+.list{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left;width:100%}
+.row:hover{border-color:var(--lamp)}
+.ic{flex:none;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--bg2);font-size:18px}
+.ic.v{background:#26213d;color:#b9a8ff}.ic.p{background:#2e1f22;color:var(--red)}.ic.f{background:var(--lamp-d);color:var(--lamp)}
+.row .nm{flex:1;min-width:0;overflow-wrap:anywhere}
+.row .sb{color:var(--mu);font-size:13px}
+.row .ar{color:var(--mu)}
+.path{display:flex;flex-wrap:wrap;gap:4px;font-size:14px;color:var(--mu);margin-bottom:12px}
+.path button{color:var(--teal)}
+.path button:hover{text-decoration:underline}
+
+/* states */
+.skel{height:64px;border-radius:12px;background:linear-gradient(90deg,var(--card),#22314f,var(--card));background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.err,.empty{text-align:center;padding:36px 16px;color:var(--mu)}
+.err b{color:var(--red);display:block;margin-bottom:6px}
+.btn{background:var(--lamp);color:#1b1503;font-weight:600;padding:9px 18px;border-radius:999px;margin-top:12px;display:inline-block}
+
+/* player */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(6,10,18,.92);display:none;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.modal.on{display:flex}
+.mh{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.mh .t{flex:1;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.x{width:38px;height:38px;border-radius:50%;background:var(--bg2);font-size:18px}
+.vw{flex:1;display:flex;align-items:center;justify-content:center;padding:0 0 10px;min-height:0}
+video{width:100%;max-height:100%;max-width:1100px;background:#000;aspect-ratio:16/9}
+.mf{display:flex;gap:10px;justify-content:center;padding:8px 14px 14px;flex-wrap:wrap}
+.mf select,.mf a{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px}
+.mf a{color:var(--teal);text-decoration:none}
+@media(max-width:560px){.kv{grid-template-columns:1fr}.kv dt{margin-top:6px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <button class="back" id="back" aria-label="Wapas">←</button>
+  <div class="logo" id="home"><span class="moon"></span>Silent Hours</div>
+  <div class="crumb" id="crumb"></div>
+</div></header>
+<main class="wrap" id="app"></main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="mh"><div class="t" id="mt"></div><button class="x" id="mx" aria-label="Band karo">✕</button></div>
+  <div class="vw"><video id="vid" controls playsinline controlslist="nodownload"></video></div>
+  <div class="mf">
+    <select id="spd" aria-label="Speed"><option value="0.75">0.75x</option><option value="1" selected>1x</option><option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="2">2x</option></select>
+    <select id="qual" aria-label="Quality" style="display:none"></select>
+  </div>
+</div>
+
+<script>
+const API='https://nt-silenthours.egomale82.workers.dev/api';
+const $=s=>document.querySelector(s), app=$('#app');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pick=(o,ks)=>{for(const k of ks){const v=o?.[k];if(v!==undefined&&v!==null&&v!=='')return v}return ''};
+const S={batches:[],q:'',tag:'All',sort:'new',batch:null,tab:'details',stack:[],cache:{}};
+
+async function get(path){
+  const [e,qs]=path.slice(1).split('?');
+  const r=await fetch('/api/p?e='+e+(qs?'&'+qs:''));
+  if(!r.ok)throw new Error('Server error '+r.status);
+  return r.json();
+}
+/* response shapes vary: find the first meaningful array */
+function toArr(d,depth=0){
+  if(Array.isArray(d))return d;
+  if(!d||typeof d!=='object'||depth>3)return [];
+  for(const k of ['data','batches','content','items','results','courses','folder','list','contents']){
+    if(d[k]!==undefined){const a=toArr(d[k],depth+1);if(a.length)return a}
+  }
+  for(const v of Object.values(d)){if(Array.isArray(v)&&v.length)return v}
+  for(const v of Object.values(d)){if(v&&typeof v==='object'){const a=toArr(v,depth+1);if(a.length)return a}}
+  return [];
+}
+function findStr(o,re,depth=0){
+  if(typeof o==='string')return re.test(o)?o:'';
+  if(!o||typeof o!=='object'||depth>6)return '';
+  for(const v of Object.values(o)){const r=findStr(v,re,depth+1);if(r)return r}
+  return '';
+}
+const URLRE=/^https?:\/\//i;
+
+/* ---------- batch helpers ---------- */
+const anyId=o=>{
+  const v=pick(o,['course_id','courseId','batch_id','batchId','entity_id','entityId','contentId','content_id','_id','id']);
+  if(v!=='')return v;
+  for(const [k,x] of Object.entries(o||{})){if(/(^|_)id$/i.test(k)&&x!==''&&x!==null&&typeof x!=='object')return x}
+  return '';
+};
+const bId=anyId;
+const bName=b=>pick(b,['name','title','batchName','course_name','courseName'])||'Batch';
+const bImg=b=>{const v=pick(b,['thumbnail','image','banner','img','thumb','poster','cover']);return typeof v==='string'&&URLRE.test(v)?v:''};
+const bDate=b=>+bId(b)||0; // bigger id = newer batch
+function bTags(b){
+  const t=new Set(),n=bName(b)+' '+pick(b,['class','className','category','exam','target']);
+  const m=n.match(/\b(?:class\s*)?(6|7|8|9|10|11|12)(?:th)?\b/i);
+  if(m)t.add('Class '+m[1]);
+  if(/dropper|repeater|13th|\bdrop\b/i.test(n))t.add('Dropper');
+  if(/\bjee\b/i.test(n))t.add('JEE');
+  if(/\bneet\b/i.test(n))t.add('NEET');
+  if(/\bcuet\b/i.test(n))t.add('CUET');
+  if(/ioqm|nsejs|sehss|olympiad/i.test(n))t.add('Olympiad');
+  if(b.section)t.add(b.section);
+  if(/\bboard/i.test(n))t.add('Boards');
+  return [...t];
+}
+const badge=b=>String(b.badge||'').trim();
+
+/* ---------- home ---------- */
+async function showHome(){
+  S.batch=null;S.stack=[];setHead('');
+  app.innerHTML=`<section class="hero"><h1>Padhai ke liye, bilkul free.</h1><p>Har student ke liye batches, lectures aur notes — bina kisi fees ke.</p></section><div class="grid">${'<div class="skel" style="height:220px"></div>'.repeat(6)}</div>`;
+  try{
+    if(!S.batches.length){const raw=toArr(await get('/batches')),seen=new Set();
+      S.batches=raw.flatMap(x=>Array.isArray(x.batches)?x.batches.map(b=>({...b,section:x.section})):[x]).filter(b=>{const k=bId(b);if(seen.has(k))return false;seen.add(k);return true}).map((b,i)=>({...b,__i:i}))}
+    renderHome();
+  }catch(e){fail(e,showHome)}
+}
+function renderHome(){
+  const tags=['All',...new Set(S.batches.flatMap(bTags))];
+  const bs=S.batches.filter(b=>(S.tag==='All'||bTags(b).includes(S.tag))&&bName(b).toLowerCase().includes(S.q.toLowerCase()));
+  bs.sort((a,b)=>{const d=bDate(b)-bDate(a)||b.__i-a.__i;return S.sort==='new'?d:-d});
+  app.innerHTML=`<section class="hero"><h1>Padhai ke liye, bilkul free.</h1><p>Har student ke liye batches, lectures aur notes — bina kisi fees ke.</p></section>
+  <div class="tools"><input class="search" id="q" placeholder="Batch search karo" value="${esc(S.q)}"><select class="sort" id="so"><option value="new"${S.sort==='new'?' selected':''}>Naye pehle</option><option value="old"${S.sort==='old'?' selected':''}>Purane pehle</option></select></div>
+  <div class="chips">${tags.map(t=>`<button class="chip${t===S.tag?' on':''}" data-t="${esc(t)}">${esc(t)}</button>`).join('')}</div>
+  <div class="count">${bs.length} batch</div>
+  <div class="grid" id="grid">${bs.map(card).join('')||'<div class="empty">Koi batch nahi mila.</div>'}</div>`;
+  const q=$('#q');q.oninput=e=>{S.q=e.target.value;const p=e.target.selectionStart;renderHome();const n=$('#q');n.focus();n.setSelectionRange(p,p)};
+  $('#so').onchange=e=>{S.sort=e.target.value;renderHome()};
+  app.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{S.tag=c.dataset.t;renderHome()});
+  app.querySelectorAll('.batch').forEach(c=>c.onclick=()=>openBatch(S.batches[+c.dataset.i]));
+}
+function card(b){
+  const img=bImg(b),tg=bTags(b);
+  return `<button class="batch" data-i="${S.batches.indexOf(b)}"><div class="thumb">${badge(b)?`<span class="tag">${esc(badge(b))}</span>`:''}${img?`<img src="${esc(img)}" alt="" loading="lazy" onerror="this.remove()">`:esc(bName(b).trim().charAt(0).toUpperCase())}</div><div class="bd"><h3>${esc(bName(b))}</h3><div class="meta">${tg.filter(t=>t!==b.section).map(t=>`<span class="pill">${esc(t)}</span>`).join('')}${b.validity_days?`<span class="pill">${esc(b.validity_days)} din</span>`:''}</div></div></button>`;
+}
+
+/* ---------- batch page ---------- */
+function openBatch(b){S.batch=b;S.tab='details';S.stack=[];renderBatch()}
+function renderBatch(){
+  const b=S.batch;setHead(bName(b));
+  app.innerHTML=`<div class="bh"><h2>${esc(bName(b))}</h2></div>
+  <div class="seg"><button data-t="details" class="${S.tab==='details'?'on':''}">Details</button><button data-t="content" class="${S.tab==='content'?'on':''}">Content</button></div>
+  <div class="panel" id="panel"></div>`;
+  app.querySelectorAll('.seg button').forEach(x=>x.onclick=()=>{S.tab=x.dataset.t;S.stack=[];renderBatch()});
+  S.tab==='details'?loadDetails():loadFolder();
+}
+const skels=()=>'<div class="list">'+'<div class="skel"></div>'.repeat(5)+'</div>';
+
+async function loadDetails(){
+  const p=$('#panel'),id=bId(S.batch);p.innerHTML=skels();
+  try{
+    const k='d'+id;const d=S.cache[k]||(S.cache[k]=await get('/details?courseId='+encodeURIComponent(id)));
+    p.innerHTML=renderObj(d.data&&typeof d.data==='object'&&!Array.isArray(d.data)?d.data:d);
+  }catch(e){fail(e,loadDetails,p)}
+}
+const nice=k=>k.replace(/[_-]/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2').replace(/^./,c=>c.toUpperCase());
+const SKIP=/^(_id|id|__v|__i|success|status|message|code|token|key|keys)$/i;
+function fmt(v,k){
+  if(typeof v==='string'&&URLRE.test(v))return /\.(png|jpe?g|webp|gif|svg)(\?|$)/i.test(v)?`<img src="${esc(v)}" alt="" style="max-width:100%;border-radius:10px;margin-top:4px">`:`<a href="${esc(v)}" target="_blank" rel="noopener" style="color:var(--teal)">Open</a>`;
+  if(/date|At$|time/i.test(k)&&v&&!isNaN(new Date(isNaN(v)?v:+v)))return esc(new Date(isNaN(v)?v:+v).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}));
+  return esc(v);
+}
+function renderObj(o,depth=0){
+  if(Array.isArray(o))return o.every(x=>x===null||typeof x!=='object')?esc(o.join(', ')):o.map(x=>renderObj(x,depth+1)).join('');
+  const prim=[],rest=[];let desc='';
+  for(const [k,v] of Object.entries(o||{})){
+    if(SKIP.test(k)||v===null||v===''||(Array.isArray(v)&&!v.length))continue;
+    if(/^(description|about|desc)$/i.test(k)&&typeof v==='string'){desc=v;continue}
+    (typeof v==='object'?rest:prim).push([k,v]);
+  }
+  let h='';
+  if(desc)h+=`<div class="box"><h3>About</h3><div class="desc">${esc(desc.replace(/<[^>]+>/g,''))}</div></div>`;
+  if(prim.length)h+=`<div class="box"><dl class="kv">${prim.map(([k,v])=>`<dt>${esc(nice(k))}</dt><dd>${fmt(v,k)}</dd>`).join('')}</dl></div>`;
+  for(const [k,v] of rest)h+=`<div class="box"><h3>${esc(nice(k))}</h3>${renderObj(v,depth+1)}</div>`;
+  return h||(depth?'':'<div class="empty">Details abhi available nahi hain.</div>');
+}
+
+/* ---------- content / folders ---------- */
+const iId=anyId;
+const iName=i=>pick(i,['name','title','fileName','file_name','topic'])||'Untitled';
+function iKind(i){
+  const t=String(pick(i,['type','contentType','content_type','entity_type','entityType','fileType','file_type','kind'])).toLowerCase();
+  const n=iName(i).toLowerCase();
+  if(/folder|dir|chapter|subject|topic|section/.test(t))return 'f';
+  if(/video|lecture|class|m3u8|vod/.test(t))return 'v';
+  if(/pdf|note|document|dpp|file|material/.test(t)||n.endsWith('.pdf'))return 'p';
+  if(i.is_folder||i.isFolder||i.folder)return 'f';
+  if(i.video_url||i.videoUrl||i.is_video)return 'v';
+  if(i.pdf_url||i.pdfUrl)return 'p';
+  return 'f';
+}
+async function loadFolder(){
+  const p=$('#panel'),cid=encodeURIComponent(bId(S.batch)),cur=S.stack[S.stack.length-1];
+  p.innerHTML=skels();
+  try{
+    const path=cur?`/folder?courseId=${cid}&folderId=${encodeURIComponent(cur.id)}`:`/content?courseId=${cid}`;
+    const items=toArr(S.cache[path]||(S.cache[path]=await get(path)));
+    const crumbs=[`<button data-d="-1">Content</button>`,...S.stack.map((s,i)=>`<span>/</span><button data-d="${i}">${esc(s.name)}</button>`)].join(' ');
+    p.innerHTML=`<div class="path">${crumbs}</div><div class="list">${items.map((it,i)=>{
+      const k=iKind(it),sub={f:'Folder',v:'Video',p:'PDF'}[k];
+      return `<button class="row" data-i="${i}"><span class="ic ${k}">${{f:'📁',v:'▶',p:'📄'}[k]}</span><span class="nm">${esc(iName(it))}<div class="sb">${sub}</div></span><span class="ar">›</span></button>`}).join('')||'<div class="empty">Yahan abhi kuch nahi hai.</div>'}</div>`;
+    p.querySelectorAll('.path button').forEach(b=>b.onclick=()=>{S.stack=S.stack.slice(0,+b.dataset.d+1);loadFolder()});
+    p.querySelectorAll('.row').forEach(r=>r.onclick=()=>openItem(items[+r.dataset.i]));
+  }catch(e){fail(e,loadFolder,p)}
+}
+async function openItem(it){
+  const k=iKind(it),id=iId(it),cid=encodeURIComponent(bId(S.batch));
+  if(k==='f'){S.stack.push({id,name:iName(it)});return loadFolder()}
+  const w=k==='p'?window.open('about:blank','_blank'):null; // avoid popup block
+  try{
+    const d=await get(`/${k==='v'?'video':'pdf'}?courseId=${cid}&contentId=${encodeURIComponent(id)}`);
+    if(k==='v'){
+      const u=findStr(d,/\.m3u8/i)||findStr(d,/^https?:\/\//i);
+      if(!u)throw new Error('Video link nahi mila');
+      play(u,iName(it));
+    }else{
+      const u=findStr(d,/\.pdf/i)||findStr(d,/^https?:\/\//i);
+      if(!u)throw new Error('PDF link nahi mila');
+      if(w)w.location=u;else location.href=u;
+    }
+  }catch(e){if(w)w.close();alert(e.message)}
+}
+
+/* ---------- player ---------- */
+let hls=null;
+function play(url,title){
+  const v=$('#vid');$('#mt').textContent=title;$('#modal').classList.add('on');
+  const q=$('#qual');q.style.display='none';
+  if(hls){hls.destroy();hls=null}
+  if(window.Hls&&Hls.isSupported()){
+    hls=new Hls();hls.loadSource(url);hls.attachMedia(v);
+    hls.on(Hls.Events.MANIFEST_PARSED,(_,m)=>{
+      if(m.levels.length>1){
+        q.innerHTML='<option value="-1">Auto</option>'+m.levels.map((l,i)=>`<option value="${i}">${l.height?l.height+'p':'Level '+(i+1)}</option>`).join('');
+        q.style.display='';q.onchange=()=>hls.currentLevel=+q.value;
+      }
+      v.play().catch(()=>{});
+    });
+    hls.on(Hls.Events.ERROR,(_,d)=>{if(d.fatal){$('#mt').textContent='Video play nahi ho paya';}});
+  }else{v.src=url;v.play().catch(()=>{})}
+  v.playbackRate=+$('#spd').value;
+}
+$('#spd').onchange=e=>$('#vid').playbackRate=+e.target.value;
+function closePlayer(){const v=$('#vid');v.pause();v.removeAttribute('src');v.load();if(hls){hls.destroy();hls=null}$('#modal').classList.remove('on')}
+$('#mx').onclick=closePlayer;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePlayer()});
+
+/* ---------- shell ---------- */
+function setHead(t){$('#crumb').textContent=t;$('#back').classList.toggle('on',!!t)}
+$('#home').onclick=()=>showHome();
+$('#back').onclick=()=>{
+  if(S.batch&&S.tab==='content'&&S.stack.length){S.stack.pop();loadFolder()}else showHome();
+};
+function fail(e,retry,el){
+  const h=`<div class="err"><b>Load nahi ho paya</b>${esc(e.message)}<br><button class="btn" id="rt">Dobara try karo</button></div>`;
+  (el||app).innerHTML=h;$('#rt').onclick=retry;
+}
+showHome();
+</script>
+</body>
+</html>
