@@ -213,7 +213,7 @@ const enc = encodeURIComponent;
 /* ---------- API ---------- */
 async function api(query) {
   let r;
-  try { r = await fetch(`${BASE}/api/scholarverse?${query}`); }
+  try { r = await fetch(`${BASE}/api/proxy?${query}`); }
   catch { throw new Error('Network/CORS error – check connection or API CORS headers.'); }
   if (!r.ok) throw new Error('Server responded with HTTP ' + r.status);
   return r.json();
