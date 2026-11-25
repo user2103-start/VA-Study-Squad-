@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Study Squad</title>
+<style>
+:root{--tx:#f3f5fa;--mut:#aab0c4;--ac:#7db4ff;
+  --glass:rgba(255,255,255,.08);--glass2:rgba(255,255,255,.14);--gl:rgba(255,255,255,.2);
+  --blur:blur(16px) saturate(150%)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;color:var(--tx);font:15px/1.5 system-ui,sans-serif;min-height:100vh;
+  background:#0d1018 center/cover fixed no-repeat}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(rgba(8,10,18,.5),rgba(8,10,18,.78))}
+header,.card,.row,button,input,details,.err,pre,#pbox{
+  background:var(--glass);border:1px solid var(--gl);
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+header{position:sticky;top:0;z-index:5;display:flex;gap:10px;align-items:center;padding:8px 14px;border-width:0 0 1px;border-radius:0}
+header img{height:36px;width:auto;border-radius:8px;cursor:pointer;display:block}
+header h1{flex:1;font-size:18px;font-weight:800;letter-spacing:.2px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+button{color:var(--tx);border-radius:10px;padding:7px 13px;font:inherit;cursor:pointer;transition:.15s}
+button:hover{background:var(--glass2);border-color:var(--ac)}
+button.on{background:rgba(125,180,255,.85);color:#0b1220;border-color:var(--ac)}
+main{max-width:1000px;margin:0 auto;padding:14px}
+.sec{font-size:24px;font-weight:800;margin:6px 0 12px}
+/* hero slider: one slot, image fades in place, dots overlay */
+.hero{position:relative;aspect-ratio:16/9;max-width:640px;margin:0 auto 16px;border-radius:18px;overflow:hidden;
+  border:1px solid var(--gl);box-shadow:0 10px 30px rgba(0,0,0,.4);background:#000;touch-action:pan-y;user-select:none;cursor:pointer}
+.hs{position:absolute;inset:0;transform:translateX(100%);transition:transform .6s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.hs.r{transform:translateX(100%)}
+.hs.l{transform:translateX(-100%)}
+.hs.on{transform:translateX(0)}
+.hs img{width:100%;height:100%;object-fit:cover;display:block}
+#dots{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:8px;padding:6px 10px;
+  border-radius:999px;background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:.2s}
+#dots i.on{background:#fff;transform:scale(1.15)}
+/* search + chips */
+#q{width:100%;border-radius:14px;padding:11px 14px;color:var(--tx);font:inherit;outline:none}
+#q::placeholder{color:var(--mut)}
+#q:focus{border-color:var(--ac)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
+.chips button{padding:4px 12px;font-size:13px;border-radius:999px}
+/* grid / cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.card{border-radius:14px;overflow:hidden;cursor:pointer;transition:.15s}
+.card:hover{border-color:var(--ac);transform:translateY(-2px)}
+.card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
+.card .b{padding:10px 12px}
+.row{display:flex;gap:10px;align-items:center;padding:10px 12px;margin-bottom:8px;border-radius:12px;cursor:pointer;transition:.15s}
+.row:hover{border-color:var(--ac)}
+.row img{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:#000;flex:none}
+.row .ic{width:28px;text-align:center;flex:none}
+.row .t{flex:1;min-width:0}
+.row .t small{display:block;color:var(--mut)}
+.tag{font-size:12px;color:var(--mut);border:1px solid var(--gl);border-radius:6px;padding:1px 7px;white-space:nowrap}
+.tabs,.crumbs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.crumbs button{font-size:13px;padding:4px 9px}
+.mut{color:var(--mut)}
+.err{background:rgba(120,30,40,.45);padding:12px;border-radius:12px}
+pre{white-space:pre-wrap;word-break:break-all;border-radius:12px;padding:12px;font-size:12px;max-height:50vh;overflow:auto;margin:12px 0}
+/* overview */
+.ov img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:#000}
+.ov h2{margin:12px 0 6px;font-size:19px}
+.ov h3{margin:22px 0 8px;font-size:16px;color:var(--mut)}
+.desc{line-height:1.6;word-break:break-word}.desc a{color:var(--ac)}
+.price{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin:8px 0}
+.price b{font-size:22px}.price s{color:var(--mut)}
+details{border-radius:12px;padding:10px 12px;margin-bottom:8px}
+summary{cursor:pointer}
+/* video page */
+.stage{max-width:960px;margin:0 auto}
+.stage video,.stage iframe{width:100%;aspect-ratio:16/9;border:0;background:#000;border-radius:14px;display:block;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.stage a{color:var(--ac);word-break:break-all;display:block;font-size:13px;margin-top:4px}
+.crumbs button.on{font-weight:700;cursor:default}
+/* pdf page */
+.pg{background:#fff;border-radius:6px;margin:0 auto 10px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.4);max-width:900px}
+.pg canvas{display:block;width:100%;height:auto}
+.stage iframe.pf{aspect-ratio:auto;height:78vh;background:#fff}
+/* player (pdf modal) */
+#player{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:20;display:flex;align-items:center;justify-content:center;padding:14px}
+#pbox{border-radius:16px;width:min(960px,100%);max-height:100%;overflow:auto;padding:12px;background:rgba(20,24,36,.75)}
+#pbox video,#pbox iframe{width:100%;aspect-ratio:16/9;border:0;background:#000;border-radius:10px}
+#pbox iframe.pdf{aspect-ratio:auto;height:70vh}
+#pbox a{color:var(--ac);word-break:break-all;display:block;font-size:13px;margin-top:4px}
+.ph{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header>
+  <img id="logo" alt="Logo">
+  <button id="back" hidden>←</button>
+  <h1 id="title">Study Squad</h1>
+  <button id="dl" hidden>⬇ Download</button>
+</header>
+<main><div id="app"></div></main>
+<div id="player" hidden><div id="pbox"></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js" defer></script>
+<script>
+const BASE = 'https://firebasegoogle-zeta.vercel.app';
+const LOGO = 'https://files.catbox.moe/meh5cf.png';
+const BG   = 'https://files.catbox.moe/82b4y7.jpg';
+const CLASSES = ['11th', '12th', '10th', '9th', '8th', '7th'];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const IMG_PROXY = true;   // false = original images seedha load honge (zyada data)
+const px = (u, w, q = 70) => IMG_PROXY
+  ? 'https://wsrv.nl/?url=' + encodeURIComponent(u) + '&w=' + w + '&q=' + q + '&output=webp&we' : u;
+function loadImg(im) {     // resized image; agar proxy fail ho to original par fallback
+  im.onerror = () => { im.onerror = null; im.src = im.dataset.orig; };
+  im.src = im.dataset.src;
+}
+{ const p = new Image();
+  p.onload = () => document.body.style.backgroundImage = `url("${p.src}")`;
+  p.onerror = () => document.body.style.backgroundImage = `url("${BG}")`;
+  p.src = px(BG, 1280, 50); }
+{ const l = $('#logo'); l.onerror = () => { l.onerror = null; l.src = LOGO; }; l.src = px(LOGO, 160); }
+
+/* ---------- API ---------- */
+async function api(params) {
+  const r = await fetch(BASE + '/api/nt?' + new URLSearchParams(params));
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const t = await r.text();
+  try { return JSON.parse(t); } catch { return { raw: t }; }
+}
+
+/* ---------- Helpers ---------- */
+const pick = (o, ks) => { for (const k of ks) if (o && o[k] != null && o[k] !== '') return o[k]; };
+function list(j) {
+  if (Array.isArray(j)) return j;
+  if (!j || typeof j !== 'object') return [];
+  for (const k of ['data','batches','content','contents','results','items','list','lives','classes']) {
+    if (j[k]) { const v = Array.isArray(j[k]) ? j[k] : list(j[k]); if (v.length) return v; }
+  }
+  for (const v of Object.values(j)) if (Array.isArray(v) && v.length && typeof v[0] === 'object') return v;
+  return [];
+}
+const nameOf = o => pick(o, ['title','name','batchName','batch_name','folder_name','file_name','heading']) || 'Untitled';
+const thumbOf = o => pick(o, ['thumbnail','image','banner','poster','img','thumb']) || pick(o && o.data, ['thumbnail']);
+const batchIdOf = o => pick(o, ['_id','id','batch_id','batchId','entity_id','entityId']);
+const entityIdOf = o => pick(o, ['entity_id','entityId','_id','id']);
+const vdcOf = o => pick(o && o.data, ['vdc_id']) || pick(o, ['vdc_id','vdcId']);
+const fmtDur = s => { s = +s; if (!s) return ''; const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return (h ? h + 'h ' : '') + m + 'm'; };
+const fmtDate = ts => +ts ? new Date(+ts * 1000).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+function kind(o) {
+  const t = String(o.type || '').toLowerCase();
+  if (t === 'file') return vdcOf(o) ? 'video' : 'pdf';
+  return 'folder';
+}
+const ICON = { folder: '📁', video: '▶️', pdf: '📄' };
+const findUrls = j => [...new Set((JSON.stringify(j).match(/https?:\/\/[^"\\\s]+/g) || []))];
+function clean(html) {
+  const d = new DOMParser().parseFromString(html || '', 'text/html');
+  d.querySelectorAll('script,style,iframe,object,embed,link,meta').forEach(n => n.remove());
+  d.body.querySelectorAll('*').forEach(n => {
+    [...n.attributes].forEach(a => {
+      if (/^on/i.test(a.name) || (/^(href|src)$/i.test(a.name) && /^\s*javascript:/i.test(a.value))) n.removeAttribute(a.name);
+    });
+    if (n.tagName === 'A') { n.target = '_blank'; n.rel = 'noopener'; }
+  });
+  return d.body.innerHTML;
+}
+const img = (src, alt = '', w = 400) =>
+  `<img class="lz" decoding="async" data-src="${esc(px(src, w))}" data-orig="${esc(src)}" alt="${esc(alt)}">`;
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { io.unobserve(e.target); loadImg(e.target); }
+}), { rootMargin: '120px' });
+new MutationObserver(() => document.querySelectorAll('img.lz:not([data-o])').forEach(im => { im.dataset.o = 1; io.observe(im); }))
+  .observe(document.body, { childList: true, subtree: true });
+
+let batchesCache = null;
+let reg = [];
+const keep = o => reg.push(o) - 1;
+const S = { batch: null, tab: 'content', stack: [{ id: 0, name: 'Root' }], q: '', cls: '' };
+
+const snap = () => ({ v: S.batch ? 'batch' : 'home', batch: S.batch, tab: S.tab, stack: S.stack.map(x => ({ ...x })) });
+const push = () => history.pushState(snap(), '');
+window.addEventListener('popstate', e => {              // phone back / in-app back
+  const st = e.state;
+  if (!st || st.v === 'home') return showBatches();
+  S.batch = st.batch; S.stack = st.stack; S.tab = st.tab;
+  $('#back').hidden = false; renderBatch();
+});
+const setTitle = t => $('#title').textContent = t;
+const loading = () => $('#app').innerHTML = '<p class="mut">Loading…</p>';
+const fail = e => $('#app').innerHTML = `<div class="err">Error: ${esc(e.message)}</div>`;
+
+/* ---------- Hero slider (one slot, fade in place, dots) ---------- */
+let heroList = [], heroK = 0, heroTimer;
+function heroLoad(k) {                                   // load only prev/current/next image
+  const n = heroList.length, sl = document.querySelectorAll('.hs');
+  [k - 1, k, k + 1].forEach(j => { const im = sl[(j + n) % n].firstElementChild; if (!im.getAttribute('src')) loadImg(im); });
+}
+function heroDots() {
+  const n = heroList.length, g = Math.floor(heroK / 7) * 7;   // dots in groups of 7
+  $('#dots').innerHTML = Array.from({ length: Math.min(7, n - g) }, (_, d) =>
+    `<i class="${g + d === heroK ? 'on' : ''}" data-act="dot" data-k="${g + d}"></i>`).join('');
+}
+function heroSetup() {
+  heroK = 0; heroLoad(0);
+  document.querySelector('.hs').className = 'hs on'; heroDots();
+}
+// dir 1 = next (new image slides in from right, old goes left), -1 = previous
+function heroShow(k, dir) {
+  const n = heroList.length; if (!n) return;
+  k = (k + n) % n; if (k === heroK) return;
+  dir = dir || (k > heroK ? 1 : -1);
+  const sl = document.querySelectorAll('.hs'), inc = sl[k], out = sl[heroK];
+  heroLoad(k);
+  inc.style.transition = 'none';                         // park incoming slide on its entry side
+  inc.className = 'hs ' + (dir > 0 ? 'r' : 'l');
+  void inc.offsetWidth;
+  inc.style.transition = '';
+  out.className = 'hs ' + (dir > 0 ? 'l' : 'r');
+  inc.className = 'hs on';
+  heroK = k; heroDots();
+}
+function heroStart() {
+  clearInterval(heroTimer);
+  heroTimer = setInterval(() => { if (!$('#hero')) return clearInterval(heroTimer); heroShow(heroK + 1, 1); }, 3500);
+}
+function heroInit() {
+  const h = $('#hero'); let x0 = 0;
+  h.addEventListener('pointerdown', e => { x0 = e.clientX; clearInterval(heroTimer); });
+  h.addEventListener('pointerup', e => {
+    if (!e.target.closest('#dots')) {
+      const dx = e.clientX - x0;
+      if (Math.abs(dx) > 40) heroShow(heroK + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+      else openBatch(reg[heroList[heroK]]);
+    }
+    heroStart();
+  });
+  h.addEventListener('pointercancel', heroStart);
+  heroSetup(); heroStart();
+}
+
+/* ---------- Home ---------- */
+const clsRe = c => new RegExp('(^|\\D)' + parseInt(c) + '(th)?(\\D|$)', 'i');
+function renderGrid() {
+  const q = S.q.trim().toLowerCase();
+  const rows = reg.map((b, i) => [b, i]).filter(([b]) => {
+    const n = nameOf(b);
+    return (!q || n.toLowerCase().includes(q)) && (!S.cls || clsRe(S.cls).test(n));
+  });
+  $('#bgrid').innerHTML = rows.length ? rows.map(([b, i]) => `
+    <div class="card" data-act="batch" data-i="${i}">
+      ${thumbOf(b) ? img(thumbOf(b), nameOf(b)) : ''}
+      <div class="b">${esc(nameOf(b))}</div>
+    </div>`).join('') : '<p class="mut">Koi batch nahi mila.</p>';
+  document.querySelectorAll('.chips button').forEach(b => b.classList.toggle('on', b.dataset.c === S.cls));
+}
+
+async function showBatches() {
+  stopMedia(); S.player = null; $('#dl').hidden = true;
+  clearInterval(heroTimer);
+  S.batch = null; S.stack = [{ id: 0, name: 'Root' }]; reg = [];
+  setTitle('Study Squad'); $('#back').hidden = true; loading();
+  try {
+    reg = batchesCache || list(await api({ type: 'batches' }));
+    batchesCache = reg.length ? reg : null;
+    if (!reg.length) return $('#app').innerHTML = '<p class="mut">Koi batch nahi mila.</p>';
+    heroList = reg.map((b, i) => thumbOf(b) ? i : -1).filter(i => i >= 0);
+    $('#app').innerHTML = `
+      <h2 class="sec">Batches</h2>
+      <div class="hero" id="hero">
+        ${heroList.map(i => `<div class="hs"><img data-src="${esc(px(thumbOf(reg[i]), 640))}" data-orig="${esc(thumbOf(reg[i]))}" alt="${esc(nameOf(reg[i]))}" draggable="false"></div>`).join('')}
+        <div id="dots"></div>
+      </div>
+      <input id="q" type="search" placeholder="Search batches…" value="${esc(S.q)}">
+      <div class="chips">${CLASSES.map(c => `<button data-act="chip" data-c="${c}">Class ${c}</button>`).join('')}</div>
+      <div class="grid" id="bgrid"></div>`;
+    renderGrid(); heroInit();
+    $('#q').addEventListener('input', e => { S.q = e.target.value; renderGrid(); });
+  } catch (e) { fail(e); }
+}
+
+/* ---------- Batch page ---------- */
+function openBatch(b) {
+  clearInterval(heroTimer);
+  S.batch = { id: batchIdOf(b), name: nameOf(b) };
+  S.stack = [{ id: 0, name: 'Root' }]; S.tab = 'content';
+  $('#back').hidden = false;
+  push(); renderBatch();
+}
+function renderBatch() {
+  stopMedia(); S.player = null; $('#dl').hidden = true;
+  setTitle(S.batch.name);
+  const tab = (k, l) => `<button class="${S.tab === k ? 'on' : ''}" data-act="tab" data-k="${k}">${l}</button>`;
+  $('#app').innerHTML = `<div class="tabs">${tab('content','Content')}${tab('overview','Overview')}${tab('live','Live')}</div><div id="body"></div>`;
+  ({ content: loadContent, overview: loadOverview, live: loadLive })[S.tab]();
+}
+const body = h => $('#body').innerHTML = h;
+
+const pkgGrid = arr => '<div class="grid">' + arr.map(c => `
+  <div class="card" data-act="pkg" data-i="${keep(c)}">
+    ${thumbOf(c) ? img(thumbOf(c), nameOf(c)) : ''}
+    <div class="b">${esc(nameOf(c))}${c.package_type ? ` <span class="tag">${esc(c.package_type)}</span>` : ''}</div>
+  </div>`).join('') + '</div>';
+
+function renderSection(s) {
+  const ld = Array.isArray(s.layout_data) ? s.layout_data : [];
+  if (s.layout_type === 'details') return ld.map(d => `
+    ${d.thumbnail ? img(d.thumbnail, '', 800) : ''}
+    <h2>${esc(d.title)}</h2>
+    <div class="price"><b>₹${esc(d.offer_price)}</b>${+d.mrp > +d.offer_price ? `<s>₹${esc(d.mrp)}</s><span class="tag">${esc(d.discount_percentage)}% off</span>` : ''}
+      ${+d.is_purchased ? '<span class="tag">Purchased</span>' : ''}</div>
+    <p class="mut">${fmtDate(d.start_date)} – ${fmtDate(d.end_date)}</p>
+    <div class="desc">${clean(d.description)}</div>
+    ${d.dynamic_link ? `<p><a class="mut" href="${esc(d.dynamic_link)}" target="_blank" rel="noopener">${esc(d.dynamic_link)}</a></p>` : ''}`).join('');
+  if (!ld.length) return '';
+  if (s.layout_type === 'packages' || s.layout_type === 'related_courses')
+    return `<h3>${esc(s.layout_title)}</h3>` + pkgGrid(ld);
+  if (s.layout_type === 'faqs')
+    return `<h3>${esc(s.layout_title)}</h3>` + ld.map(f => `<details><summary>${esc(pick(f, ['question','title','q']))}</summary>
+      <div class="desc">${clean(pick(f, ['answer','description','a']))}</div></details>`).join('');
+  return `<h3>${esc(s.layout_title || s.layout_type)}</h3><pre>${esc(JSON.stringify(ld, null, 2))}</pre>`;
+}
+
+async function loadOverview() {
+  reg = []; body('<p class="mut">Loading…</p>');
+  try {
+    const tabs = list(await api({ type: 'overview', overview: S.batch.id })).filter(t => t.type !== 'content');
+    const html = tabs.map(t => {
+      let h = (t.data || []).filter(x => x.layout_type)
+        .sort((a, b) => (a.layout_type === 'details' ? 0 : 1) - (b.layout_type === 'details' ? 0 : 1)).map(renderSection).join('');
+      if (t.description) h += `<div class="desc">${clean(t.description)}</div>`;
+      return h && (t.type === 'overview' ? h : `<h3>${esc(t.title)}</h3>` + h);
+    }).join('');
+    body(`<div class="ov">${html || '<p class="mut">Overview khali hai.</p>'}</div>`);
+  } catch (e) { body(`<div class="err">${esc(e.message)}</div>`); }
+}
+
+async function loadContent() {
+  reg = []; body('<p class="mut">Loading…</p>');
+  const cur = S.stack[S.stack.length - 1];
+  const crumbs = '<div class="crumbs">' + S.stack.map((s, i) =>
+    `<button data-act="crumb" data-i="${i}">${esc(s.name)}</button>`).join('') + '</div>';
+  try {
+    const items = list(await api({ type: 'content', content: S.batch.id, folder: cur.id }));
+    body(crumbs + (items.length ? items.map(it => {
+      const k = kind(it), th = thumbOf(it), d = fmtDur(it.data && it.data.duration);
+      return `<div class="row" data-act="${k}" data-i="${keep(it)}">
+        ${th ? img(th, '', 200) : `<span class="ic">${ICON[k]}</span>`}
+        <span class="t">${esc(nameOf(it))}${d ? `<small>${d}</small>` : ''}</span>
+        <span class="tag">${k}</span></div>`;
+    }).join('') : '<p class="mut">Is folder me kuch nahi hai.</p>'));
+  } catch (e) { body(crumbs + `<div class="err">${esc(e.message)}</div>`); }
+}
+
+async function loadLive() {
+  reg = []; body('<p class="mut">Loading…</p>');
+  try {
+    const items = list(await api({ type: 'live', id: S.batch.id }));
+    body(items.length ? items.map(it => `<div class="row" data-act="live" data-i="${keep(it)}">
+      <span class="ic">🔴</span><span class="t">${esc(nameOf(it))}</span></div>`).join('')
+      : '<p class="mut">Abhi koi live class nahi.</p>');
+  } catch (e) { body(`<div class="err">${esc(e.message)}</div>`); }
+}
+
+/* ---------- Media ---------- */
+let hls, pdfDoc = null, pdfBuf = null, pdfTok = 0;
+function stopMedia() {
+  pdfTok++; if (pdfDoc) { try { pdfDoc.destroy(); } catch {} pdfDoc = null; } pdfBuf = null;
+  if (hls) { hls.destroy(); hls = null; }
+  const v = $('#vid'); if (v) { v.pause(); v.removeAttribute('src'); v.load(); }
+}
+function closePlayer() { stopMedia(); $('#player').hidden = true; $('#pbox').innerHTML = ''; }
+
+function mediaView(j, type) {
+  const urls = findUrls(j);
+  const main = type === 'pdf'
+    ? (urls.find(u => /\.pdf(\?|$)/i.test(u)) || urls[0])
+    : (urls.find(u => /\.m3u8/i.test(u)) || urls.find(u => /\.mp4/i.test(u)) ||
+       urls.find(u => /youtu\.?be/i.test(u)) || urls[0]);
+  let view = '';
+  if (main) {
+    if (type === 'pdf') view = `<iframe class="pdf" src="${esc(main)}"></iframe>`;
+    else if (/\.m3u8/i.test(main) || /\.mp4/i.test(main)) view = '<video id="vid" controls autoplay playsinline></video>';
+    else if (/youtu\.?be/i.test(main)) {
+      const id = (main.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/) || [])[1];
+      view = id ? `<iframe allowfullscreen src="https://www.youtube.com/embed/${id}"></iframe>` : '';
+    } else view = `<iframe allowfullscreen src="${esc(main)}"></iframe>`;
+  }
+  return { urls, main, view };
+}
+function attachMedia(main) {
+  const v = $('#vid');
+  if (!v || !main) return;
+  if (/\.m3u8/i.test(main) && window.Hls && Hls.isSupported()) { hls = new Hls(); hls.loadSource(main); hls.attachMedia(v); }
+  else v.src = main;
+}
+function showMedia(j, title, type) {
+  const { urls, main, view } = mediaView(j, type);
+  const links = urls.map(u => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u)}</a>`).join('');
+  if (type === 'video') {                  // new page: only the video, no list behind
+    stopMedia(); S.player = title;
+    const trail = S.tab === 'content'
+      ? S.stack.map((c, i) => `<button data-act="pcrumb" data-i="${i}">${esc(c.name)}</button>`).join('') : '';
+    $('#app').innerHTML = `<div class="crumbs">${trail}<button class="on">${esc(title)}</button></div>
+      <div class="stage">${view || '<p class="mut">Video URL nahi mila.</p>' + links}</div>`;
+    attachMedia(main); window.scrollTo(0, 0); push();
+    return;
+  }
+  $('#pbox').innerHTML = `<div class="ph"><b>${esc(title)}</b><button data-act="close">✕</button></div>
+    ${view || '<p class="mut">Response me koi URL nahi mila.</p>'}${links}`;
+  $('#player').hidden = false;
+}
+async function playVideo(it, title) {
+  try { showMedia(await api({ type: 'video', content_id: entityIdOf(it), course_id: S.batch ? S.batch.id : '' }), title, 'video'); }
+  catch (e) { alert('Video error: ' + e.message); }
+}
+function loadPdfJs() {
+  if (window.pdfjsLib) return Promise.resolve();
+  const V = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  return new Promise((ok, no) => {
+    const sc = document.createElement('script');
+    sc.src = V + 'pdf.min.js';
+    sc.onload = () => { pdfjsLib.GlobalWorkerOptions.workerSrc = V + 'pdf.worker.min.js'; ok(); };
+    sc.onerror = no; document.head.appendChild(sc);
+  });
+}
+async function drawPdfPage(doc, el, tok) {
+  try {
+    const page = await doc.getPage(+el.dataset.p);
+    if (tok !== pdfTok) return;
+    const v0 = page.getViewport({ scale: 1 }), w = el.clientWidth || 360;
+    const vp = page.getViewport({ scale: (w / v0.width) * Math.min(window.devicePixelRatio || 1, 2) });
+    const c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
+    await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+    if (tok !== pdfTok) return;
+    el.style.aspectRatio = ''; el.appendChild(c);
+  } catch {}
+}
+async function renderPdf(url) {
+  const tok = ++pdfTok, box = $('#pdfv');
+  const alive = () => tok === pdfTok && document.body.contains(box);
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    pdfBuf = await r.arrayBuffer();                       // ek hi baar download: view + download dono isi se
+    await loadPdfJs();
+    if (!alive()) return;
+    pdfDoc = await pdfjsLib.getDocument({ data: new Uint8Array(pdfBuf.slice(0)) }).promise;
+    if (!alive()) return;
+    const doc = pdfDoc, v1 = (await doc.getPage(1)).getViewport({ scale: 1 });
+    box.innerHTML = '';
+    const ob = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { ob.unobserve(e.target); drawPdfPage(doc, e.target, tok); }
+    }), { rootMargin: '400px' });                         // pages tabhi render jab screen ke paas aaye
+    for (let p = 1; p <= doc.numPages; p++) {
+      const d = document.createElement('div');
+      d.className = 'pg'; d.dataset.p = p; d.style.aspectRatio = '1 / ' + (v1.height / v1.width);
+      box.appendChild(d); ob.observe(d);
+    }
+  } catch (e) {                                           // CORS/parse fail -> Google viewer fallback
+    if (!alive()) return;
+    pdfBuf = null;
+    box.innerHTML = `<iframe class="pf" src="https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent(url)}"></iframe>`;
+  }
+}
+function downloadPdf(url, name) {
+  if (!pdfBuf) return window.open(url, '_blank', 'noopener');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([pdfBuf], { type: 'application/pdf' }));
+  a.download = String(name).replace(/[\\/:*?"<>|]+/g, '_') + '.pdf';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+function showPdfPage(url, title, urls) {
+  stopMedia(); S.player = title;
+  const trail = S.tab === 'content'
+    ? S.stack.map((c, i) => `<button data-act="pcrumb" data-i="${i}">${esc(c.name)}</button>`).join('') : '';
+  $('#app').innerHTML = `<div class="crumbs">${trail}<button class="on">${esc(title)}</button></div>
+    <div class="stage" id="pdfv"><p class="mut">PDF load ho raha hai…</p></div>`;
+  const dl = $('#dl'); dl.hidden = !url; dl.onclick = () => downloadPdf(url, title);
+  window.scrollTo(0, 0); push();
+  if (url) renderPdf(url);
+  else $('#pdfv').innerHTML = '<p class="mut">PDF URL nahi mila.</p>' +
+    urls.map(u => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u)}</a>`).join('');
+}
+async function openPdf(it) {
+  try {
+    const j = await api({ type: 'pdf', course_id: S.batch.id, content_id: entityIdOf(it) });
+    const fu = it.data && it.data.file_url;
+    const urls = findUrls(fu ? { api: j, file_url: fu } : j);
+    showPdfPage(urls.find(u => /\.pdf(\?|$)/i.test(u)) || urls[0], nameOf(it), urls);
+  } catch (e) { alert('PDF error: ' + e.message); }
+}
+
+/* ---------- Events ---------- */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const act = el.dataset.act, it = reg[el.dataset.i];
+  if (act === 'batch' || act === 'pkg') openBatch(it);
+  else if (act === 'dot') { heroShow(+el.dataset.k); heroStart(); }
+  else if (act === 'chip') { S.cls = S.cls === el.dataset.c ? '' : el.dataset.c; renderGrid(); }
+  else if (act === 'tab') { if (S.tab !== el.dataset.k) { S.tab = el.dataset.k; push(); renderBatch(); } }
+  else if (act === 'pcrumb') { S.stack = S.stack.slice(0, +el.dataset.i + 1); S.tab = 'content'; push(); renderBatch(); }
+  else if (act === 'crumb') { S.stack = S.stack.slice(0, +el.dataset.i + 1); push(); loadContent(); }
+  else if (act === 'folder') { S.stack.push({ id: entityIdOf(it), name: nameOf(it) }); push(); loadContent(); }
+  else if (act === 'video') playVideo(it, nameOf(it));
+  else if (act === 'pdf') openPdf(it);
+  else if (act === 'live') {
+    const v = vdcOf(it);
+    if (v) playVideo(it, nameOf(it)); else showMedia(it, nameOf(it), 'video');
+  }
+  else if (act === 'close') closePlayer();
+});
+$('#player').addEventListener('click', e => { if (e.target.id === 'player') closePlayer(); });
+$('#logo').onclick = () => { if (S.batch) { showBatches(); push(); } else window.scrollTo(0, 0); };
+$('#back').onclick = () => history.back();
+
+showBatches();
+history.replaceState(snap(), '');
+</script>
+</body>
+</html>
